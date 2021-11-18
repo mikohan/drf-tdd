@@ -24,5 +24,5 @@ COPY ./app /app
 RUN pip3.7 install flake8
 RUN flake8 --ignore=E501,F401 ./app
 
-# RUN adduser -D user
-# USER user
+RUN adduser -D user
+USER user
