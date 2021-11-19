@@ -1,7 +1,8 @@
 {
   "executionEnvironments": [{ "root": "./app" }],
   "stubPath": [
-    "/home/manhee/Disk/ProjectsDisk/Django/venv/lib/python3.8/site-packages/django-stubs",
-    "/usr/local/lib/python3.8/dist-packages/django-stubs"
-  ]
+    "~/Projects/quora/venv/lib/python3.8/site-packages/django-stubs"
+  ],
+  "venvPath": "/home/manhee/Projects/quora/",
+  "venv": "venv"
 }
