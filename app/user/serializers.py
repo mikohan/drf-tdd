@@ -13,12 +13,20 @@ class UserSrializer(serializers.ModelSerializer):
 
         def create(self, validated_data):
             """Create a new user with encrypted password and retur it"""
-            return get_user_model().objects.create_user(**validated_data)
+            password = validated_data.pop("password", None)
+            # user = get_user_model().objects.create_user(email, password)  # type: ignore
+            print(validated_data, password)
+
+            user = self.Meta.model(**validated_data)  # type: ignore
+            if password is not None:
+                user.set_password(password)
+            user.save
+            return user
 
         def update(self, instance, validated_data):
             """Update a user, setting the password correctly and return it"""
-            password = validated_data.pop('password', None)
-            user = super().update(instance, validated_data)
+            password = validated_data.pop("password", None)
+            user = super().update(instance, validated_data)  # type: ignore
 
             if password:
                 user.set_password(password)
