@@ -12,7 +12,7 @@ ME_URL = reverse("user:me")
 
 
 def create_user(**params):
-    return get_user_model().objects.create_user(**params)
+    return get_user_model().objects.create_user(**params)  # type: ignore
 
 
 def create_payload():
@@ -37,9 +37,9 @@ class PublicUserApiTest(TestCase):
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        # user = get_user_model().objects.get(**res.data)
-        # self.assertTrue(user.check_password(payload["password"]))
-        self.assertNotIn("password", res.data)
+        user = get_user_model().objects.get(**res.data)  # type: ignore
+        self.assertTrue(user.check_password(payload["password"]))
+        self.assertNotIn("password", res.data)  # type: ignore
 
     def test_user_exists(self):
         """Test creating user that alrady exists fails"""
@@ -53,7 +53,7 @@ class PublicUserApiTest(TestCase):
 
     def test_password_too_short(self):
         """Test that the password must be more than 5 chars"""
-        payload = {"email": "test@test.com", "password": "password"}
+        payload = {"email": "test@test.com", "password": "pas"}
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -65,7 +65,7 @@ class PublicUserApiTest(TestCase):
         create_user(**payload)
         res = self.client.post(TOKEN_URL, payload)
 
-        self.assertIn("token", res.data)
+        self.assertIn("token", res.data)  # type: ignore
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_invalid_credentials(self):
@@ -75,7 +75,7 @@ class PublicUserApiTest(TestCase):
 
         res = self.client.post(TOKEN_URL, wrong_payload)
 
-        self.assertNotIn("token", res.data)
+        self.assertNotIn("token", res.data)  # type: ignore
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_no_user(self):
@@ -85,7 +85,7 @@ class PublicUserApiTest(TestCase):
 
         res = self.client.post(TOKEN_URL, payload)
 
-        self.assertNotIn("token", res.data)
+        self.assertNotIn("token", res.data)  # type: ignore
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_no_password_given(self):
@@ -96,7 +96,7 @@ class PublicUserApiTest(TestCase):
 
         res = self.client.post(TOKEN_URL, wrong_payload)
 
-        self.assertNotIn("token", res.data)
+        self.assertNotIn("token", res.data)  # type: ignore
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_retreive_user_unatuthorized(self):
@@ -121,7 +121,7 @@ class PrivateUserApiTests(TestCase):
         res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, {"name": self.user.name, "email": self.user.email})
+        self.assertEqual(res.data, {"name": self.user.name, "email": self.user.email})  # type: ignore
 
     def test_post_me_not_allowed(self):
         """Test that POST is not allowed on the url"""

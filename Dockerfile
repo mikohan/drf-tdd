@@ -5,7 +5,7 @@ MAINTAINER AngaraLtd
 ENV PYTHONUNBUFFERED 1
 # ENV PYTHONPATH="$PYTHONPATH:/usr/local/bin/"
 
-
+RUN apk add --no-cache su-exec
 
 COPY ./requirements.txt /requirements.txt
 
@@ -21,8 +21,6 @@ RUN mkdir /app
 WORKDIR /app
 COPY ./app /app
 
-RUN pip3.7 install flake8
-RUN flake8 --ignore=E501,F401 ./app
-
 RUN adduser -D user
 USER user
+

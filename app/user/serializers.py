@@ -3,35 +3,36 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 
-class UserSrializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """Serizlier for the users object"""
 
     class Meta:
         model = get_user_model()
         fields = ["email", "password", "name"]
-        extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+        extra_kwargs = {
+            "password": {"write_only": True, "min_length": 5},
+            "name": {"required": False},
+        }
 
-        def create(self, validated_data):
-            """Create a new user with encrypted password and retur it"""
-            password = validated_data.pop("password", None)
-            # user = get_user_model().objects.create_user(email, password)  # type: ignore
-            print(validated_data, password)
+    def create(self, validated_data):
+        # raise TypeError
+        """Create a new user with encrypted password and retur it"""
 
-            user = self.Meta.model(**validated_data)  # type: ignore
-            if password is not None:
-                user.set_password(password)
-            user.save
-            return user
+        password = validated_data.pop("password", None)
+        email = validated_data.pop("email", None)
+        user = get_user_model().objects.create_user(email, password, **validated_data)  # type: ignore
 
-        def update(self, instance, validated_data):
-            """Update a user, setting the password correctly and return it"""
-            password = validated_data.pop("password", None)
-            user = super().update(instance, validated_data)  # type: ignore
+        return user
 
-            if password:
-                user.set_password(password)
-                user.save()
-            return user
+    def update(self, instance, validated_data):
+        """Update a user, setting the password correctly and return it"""
+        password = validated_data.pop("password", None)
+        user = super().update(instance, validated_data)  # type: ignore
+
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
 
 
 class AuthTokenSerializer(serializers.Serializer):
