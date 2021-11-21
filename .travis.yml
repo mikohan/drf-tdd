@@ -19,6 +19,9 @@ env:
     # A different port must be used when not using the
     # default PostgreSQL:
     - PGPORT=5433
+    - SECRET_KEY = "#%*86=8)bur_c$l5g!9iq+mz-zz8=@j919l4w@5w&0w6d8@+8!"
+    - DEBUG = True
+
   jobs:
     - NODE_ENV=test DB_PORT=5432 DB_USERNAME=postgres
 
