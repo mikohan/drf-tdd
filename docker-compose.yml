@@ -7,11 +7,15 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app
+      - static:/vol/web/static
+      - media:/vol/web/media
+    env_file:
+      - .env
     command: >
       sh -c "sleep 10;python manage.py wait_for_db && 
               python manage.py migrate &&
-              python manage.py runserver 0.0.0.0:8000"
+              gunicorn app.wsgi:application --bind 0.0.0.0:8000"
+    # python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -37,3 +41,18 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./logs:/logs
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/vol/web/static
+    ports:
+      - "8080:8080"
+volumes:
+  postgres-data:
+  static:
+  media:
+

@@ -5,7 +5,7 @@ MAINTAINER AngaraLtd
 ENV PYTHONUNBUFFERED 1
 # ENV PYTHONPATH="$PYTHONPATH:/usr/local/bin/"
 
-RUN apk add --no-cache su-exec
+RUN pip install --upgrade pip 
 
 COPY ./requirements.txt /requirements.txt
 
@@ -27,4 +27,7 @@ RUN adduser -D user
 RUN chown -R user:user /vol/
 RUN chmod -R 755 /vol/web
 USER user
+
+# COPY ./entrypoint.sh /
+# ENTRYPOINT ["sh", "/entrypoint.sh"]
 
