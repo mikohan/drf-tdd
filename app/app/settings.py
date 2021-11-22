@@ -145,3 +145,4 @@ SWAGGER_SETTINGS = {
         "api_key": {"type": "apiKey", "in": "header", "name": "Authorization"}
     },
 }
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520

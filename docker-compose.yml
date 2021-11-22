@@ -13,6 +13,7 @@ services:
       - .env
     command: >
       sh -c "sleep 10;python manage.py wait_for_db && 
+              python manage.py collectstatic --no-input &&
               python manage.py migrate &&
               gunicorn app.wsgi:application --bind 0.0.0.0:8000"
     # python manage.py runserver 0.0.0.0:8000"
@@ -49,6 +50,7 @@ services:
     build: ./nginx
     volumes:
       - static:/vol/web/static
+      - media:/vol/web/media
     ports:
       - "8080:8080"
 volumes:
